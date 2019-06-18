@@ -1,10 +1,10 @@
 $(document).ready(function() {
 
-    let people = ["Adam Sandler", "Tom Hanks", "Taylor Swift", "Julia Roberts"];
+    let sports = ["Basketball", "Baseball"];
     // let name = $(this).attr("btn-name")
     function displayGif() {
-        let person = $(this).attr('btn-name');
-        let gifyUrl = "https://api.giphy.com/v1/gifs/search?q=" + person + "&api_key=zsTnGJdunYGgLRWLD45Z6AUFSftgbMOm&limit=5&lang=en";
+        let sport = $(this).attr('btn-name');
+        let gifyUrl = "https://api.giphy.com/v1/gifs/search?q=" + sport + "&api_key=zsTnGJdunYGgLRWLD45Z6AUFSftgbMOm&limit=5";
         $.ajax({
             url: gifyUrl,
             method: 'GET'
@@ -12,17 +12,19 @@ $(document).ready(function() {
             console.log(gifyUrl);
             let result = response.data;
             console.log(result);
-
+            $("#display").empty();
             for (let i = 0; i < result.length; i++) {
                 let gifDiv = $("<div>");
-                let p = $("<p>").text("Rating: " + result[i].rating);
-                let pImage = $("<img>");
-                pImage.attr("src", result[i].images.original.url);
+                let p = $("<p>");
+                p.text("Rating: " + result[i].rating);
                 gifDiv.append(p);
+                let pImage = $("<img>");
+                pImage.addClass("still-images border border-success");
+                pImage.attr("src", result[i].images.fixed_height_still.url);
                 gifDiv.append(pImage);
-
-                $("#person-display").prepend(gifDiv);
+                $("#display").prepend(gifDiv);
             }
+
         });
     }
 
@@ -30,27 +32,29 @@ $(document).ready(function() {
 
         $('#buttons').empty();
 
-        for (let i = 0; i < people.length; i++) {
+        for (let i = 0; i < sports.length; i++) {
             let b = $("<button>");
 
-            b.addClass("person-btn");
-            b.attr("btn-name", people[i]);
-            b.text(people[i]);
+            b.addClass("sport-btn btn-dark p-2 ml-2");
+            b.attr("btn-name", sports[i]);
+            b.text(sports[i]);
             $('#buttons').append(b);
         }
     }
-    $("#add-person").on("click", function(event) {
+    $("#add-sport").on("click", function(event) {
         event.preventDefault();
 
-        let personInput = $("#input").val().trim();
-        people.push(personInput);
+        let sportInput = $("#input").val().trim();
+        sports.push(sportInput);
         buttons();
         $("#input").val("");
-        console.log(people);
+        console.log(sports);
 
     });
-
-    $(document).on("click", ".person-btn", displayGif);
     buttons();
+
+    $(document).on("click", ".sport-btn", displayGif);
+
+
 
 })
