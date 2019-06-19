@@ -1,10 +1,11 @@
 $(document).ready(function() {
 
     let sports = [];
+    let favorites = [];
 
     function displayGif() {
         let sport = $(this).attr('btn-name');
-        let gifyUrl = "https://api.giphy.com/v1/gifs/search?q=" + sport + "&api_key=zsTnGJdunYGgLRWLD45Z6AUFSftgbMOm&limit=10";
+        let gifyUrl = "https://api.giphy.com/v1/gifs/search?q=" + sport + "&api_key=zsTnGJdunYGgLRWLD45Z6AUFSftgbMOm&limit=16";
         $.ajax({
             url: gifyUrl,
             method: 'GET'
@@ -15,32 +16,37 @@ $(document).ready(function() {
             $("#display").empty();
             for (let i = 0; i < result.length; i++) {
                 let gifDiv = $("<div>");
-                gifDiv.addClass("border border-white mt-2 mb-2 p-2")
+                let pImage = $("<img>");
+                pImage.addClass("still-images border border-success mt-2");
+                pImage.attr("src", result[i].images.fixed_width_still.url)
+                pImage.attr("data-state", "still");
+                pImage.attr("data-still", result[i].images.fixed_width_still.url);
+                pImage.attr("data-animate", result[i].images.fixed_width.url);
+                gifDiv.append(pImage);
                 let p = $("<p>");
                 p.addClass("text-white")
                 p.text("Rating: " + result[i].rating);
                 gifDiv.append(p);
-                let pImage = $("<img>");
-                pImage.addClass("still-images border border-success");
-                pImage.attr("src", result[i].images.fixed_height_still.url)
-                pImage.attr("data-state", "still");
-                pImage.attr("data-still", result[i].images.fixed_height_still.url);
-                pImage.attr("data-animate", result[i].images.fixed_height.url);
-                gifDiv.append(pImage);
+                let f = $("<input>");
+                f.addClass("btn btn-success");
+                f.attr("id", "add-favorite");
+                f.attr("type", "submit");
+                f.attr("value", "Add to Favorites");
+                gifDiv.append(f);
                 $("#display").prepend(gifDiv);
             }
-            $('.still-images').on("click", function() {
-                let animate = $(this).attr("data-state");
-                if (animate === "still") {
-                    $(this).attr("src", $(this).attr("data-animate"));
-                    $(this).attr("data-state", "animate");
-                } else {
-                    $(this).attr("src", $(this).attr("data-still"));
-                    $(this).attr("data-state", "still");
-                }
-            });
-
         });
+    }
+
+    function animateGifs() {
+        let animate = $(this).attr("data-state");
+        if (animate === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+        } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+        }
     }
 
     function buttons() {
@@ -68,4 +74,5 @@ $(document).ready(function() {
     });
     buttons();
     $(document).on("click", ".sport-btn", displayGif);
+    $(document).on("click", ".still-images", animateGifs);
 })
