@@ -1,21 +1,21 @@
 $(document).ready(function() {
 
     let sports = [];
-    let favorites = [];
+    // let favorites = [];
 
     function displayGif() {
         let sport = $(this).attr('btn-name');
-        let gifyUrl = "https://api.giphy.com/v1/gifs/search?q=" + sport + "&api_key=zsTnGJdunYGgLRWLD45Z6AUFSftgbMOm&limit=16";
+        let gifyUrl = "https://api.giphy.com/v1/gifs/search?q=" + sport + "&api_key=zsTnGJdunYGgLRWLD45Z6AUFSftgbMOm&limit=20";
         $.ajax({
             url: gifyUrl,
             method: 'GET'
         }).then(function(response) {
             console.log(gifyUrl);
             let result = response.data;
-            console.log(result);
             $("#display").empty();
             for (let i = 0; i < result.length; i++) {
                 let gifDiv = $("<div>");
+                gifDiv.addClass("mt-3");
                 let pImage = $("<img>");
                 pImage.addClass("still-images border border-success mt-2");
                 pImage.attr("src", result[i].images.fixed_width_still.url)
@@ -27,12 +27,12 @@ $(document).ready(function() {
                 p.addClass("text-white")
                 p.text("Rating: " + result[i].rating);
                 gifDiv.append(p);
-                let f = $("<input>");
-                f.addClass("btn btn-success");
-                f.attr("id", "add-favorite");
-                f.attr("type", "submit");
-                f.attr("value", "Add to Favorites");
-                gifDiv.append(f);
+                // let f = $("<button>");
+                // f.addClass("btn btn-success");
+                // f.attr("id", "add-favorite");
+                // f.attr("type", "submit");
+                // f.attr("value", "Add to Favorites");
+                // gifDiv.append(f);
                 $("#display").prepend(gifDiv);
             }
         });
